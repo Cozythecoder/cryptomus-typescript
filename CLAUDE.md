@@ -8,7 +8,7 @@ Zero-dependency, framework-agnostic TypeScript client for the Cryptomus Merchant
 
 **No framework adapters.** This is a standard library, like `stripe-node`. One entry point, no peer dependencies, no NestJS modules or Vue composables shipped in `src/`. Framework wiring belongs in the README as documentation snippets.
 
-**Zero runtime dependencies.** MD5 and base64 are implemented in `src/core/crypto.ts` rather than imported, so the package runs unchanged on Node, Bun, Deno, edge runtimes and the browser. Do not add a dependency to solve something already solved there.
+**Zero runtime dependencies, but prefer the platform over hand-rolling.** Signing uses Node's built-in `node:crypto` (`src/core/crypto.ts`). An earlier version reimplemented MD5 and base64 by hand for edge-runtime support; that was 110 lines of hand-rolled crypto for a target we do not deploy to, and it was removed. Targets are Node 18+, Bun and Deno — not Vercel Edge or Cloudflare Workers. Reach for a builtin before writing your own, and for a maintained package before adding either.
 
 ## Architecture
 

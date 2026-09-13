@@ -3,7 +3,7 @@
 A fully typed, dependency-free [Cryptomus Merchant API](https://doc.cryptomus.com/merchant-api) client for TypeScript. One client, no framework coupling — use it from Express, NestJS, Next.js, Fastify, Hono, Bun, Deno or a plain script.
 
 - **Complete API coverage** — every documented merchant endpoint: payments, static wallets, payouts, transfers, recurring payments, balances, exchange rates, discounts and the webhook test endpoints.
-- **Zero dependencies** — no axios, no crypto library. Runs on Node 18+, Bun, Deno, Vercel Edge, Cloudflare Workers and the browser.
+- **Zero dependencies** — no axios, no crypto library. Signing uses Node's built-in `node:crypto`. Runs on Node 18+, Bun and Deno.
 - **Webhook verification that actually works** — see [the signature gotcha](#the-signature-gotcha-read-this) below.
 - **Typed errors, retries, timeouts** and cursor pagination as an async iterator.
 
@@ -368,7 +368,7 @@ fastify.post('/api/cryptomus/webhook', async (request, reply) => {
 });
 ```
 
-### Hono, Elysia, Bun, Deno, Vercel Edge, Cloudflare Workers
+### Hono, Elysia, Bun, Deno
 
 All use the standard `Request`, so it is the same one line:
 
@@ -376,7 +376,7 @@ All use the standard `Request`, so it is the same one line:
 const event = cryptomus.webhooks.constructEvent(await request.text());
 ```
 
-On edge runtimes you often want verification without the API client:
+When a service only needs to verify webhooks and never calls the API, skip the client:
 
 ```ts
 import { createWebhookVerifier } from 'cryptomus-ts';
@@ -549,9 +549,11 @@ Treat `paid` **and** `paid_over` as success. Payout statuses (`process`, `check`
 
 ---
 
-## Edge and serverless
+## Runtime support
 
-The signing code implements MD5 and base64 in pure TypeScript rather than importing `node:crypto`, because Web Crypto does not offer MD5 and `node:crypto` is unavailable on edge runtimes. The same bundle therefore runs unmodified on Vercel Edge, Cloudflare Workers, Deno and Bun.
+Signing uses Node's built-in `node:crypto`, so the package works on Node 18+, Bun and Deno with no dependencies.
+
+It does **not** run on Vercel Edge or Cloudflare Workers. Cryptomus signs with MD5, and Web Crypto deliberately omits MD5 while edge runtimes omit `node:crypto`. Supporting them needs a bundled MD5, which is not worth ~110 lines of hand-rolled crypto for a gateway you call from a server anyway. Run your webhook route on the Node runtime — in Next.js that is `export const runtime = 'nodejs'`.
 
 If you only need to verify webhooks, skip the client entirely:
 
