@@ -1,0 +1,50 @@
+{
+  "name": "cryptomus-ts",
+  "version": "1.0.0",
+  "description": "Fully typed, zero-dependency Cryptomus Merchant API client for TypeScript.",
+  "type": "module",
+  "license": "MIT",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "cryptomus",
+    "crypto",
+    "payments",
+    "payment-gateway",
+    "typescript",
+    "webhooks"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build",
+    "mock": "tsx examples/mock-cryptomus-server.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "tsup": "^8.3.5",
+    "tsx": "^4.23.13",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}
