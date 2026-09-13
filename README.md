@@ -8,7 +8,7 @@ A fully typed, dependency-free [Cryptomus Merchant API](https://doc.cryptomus.co
 - **Typed errors, retries, timeouts** and cursor pagination as an async iterator.
 
 ```bash
-npm install cryptomus-ts
+npm install git+ssh://git@github.com/Cozythecoder/cryptomus-typescript.git
 ```
 
 ---
@@ -404,6 +404,62 @@ browser  →  your backend (cryptomus-ts)  →  Cryptomus
 ```
 
 To show live payment status in a UI, expose a small status endpoint that calls `payments.info()` server-side, and poll it from the client. Fulfil orders from the verified webhook, never from a client-side poll.
+
+---
+
+## Installing this package
+
+The repo is private, so there are three ways to consume it. Nothing needs publishing to the public npm registry.
+
+### From the private repo (simplest)
+
+```bash
+npm install git+ssh://git@github.com/Cozythecoder/cryptomus-typescript.git
+```
+
+Anyone with repo access and an SSH key can install it. The `prepare` script builds `dist/` automatically on install, so consumers never need to build it themselves. Pin a version with a tag or commit:
+
+```bash
+npm install git+ssh://git@github.com/Cozythecoder/cryptomus-typescript.git#v1.0.0
+```
+
+### From a tarball
+
+The npm equivalent of a Python wheel:
+
+```bash
+npm pack                                   # produces cryptomus-ts-1.0.0.tgz
+npm install ../path/to/cryptomus-ts-1.0.0.tgz
+```
+
+Useful for air-gapped installs or vendoring the artefact into another repo.
+
+### From GitHub Packages
+
+For a private registry with proper versioning, publish to GitHub Packages:
+
+```bash
+npm version patch
+npm publish
+```
+
+Consumers add an `.npmrc`:
+
+```
+@cozythecoder:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
+```
+
+This needs the package renamed to the `@cozythecoder/` scope in `package.json`.
+
+### Local development against another project
+
+```bash
+cd cryptomus-typescript && npm link
+cd ../your-app && npm link cryptomus-ts
+```
+
+Changes appear immediately, but remember `npm link` uses your working tree, so run `npm run build` after editing.
 
 ---
 

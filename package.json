@@ -33,11 +33,12 @@
   ],
   "scripts": {
     "build": "tsup",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run typecheck && npm run test",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "prepublishOnly": "npm run typecheck && npm run test && npm run build",
     "mock": "tsx examples/mock-cryptomus-server.ts"
   },
   "devDependencies": {
@@ -46,5 +47,14 @@
     "tsx": "^4.23.13",
     "typescript": "^5.7.3",
     "vitest": "^2.1.8"
-  }
+  },
+  "author": "cozythecoder",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Cozythecoder/cryptomus-typescript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Cozythecoder/cryptomus-typescript/issues"
+  },
+  "homepage": "https://github.com/Cozythecoder/cryptomus-typescript#readme"
 }
